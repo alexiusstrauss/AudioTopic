@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 import speech_recognition as sr
-from fastapi import UploadFile
+from fastapi import Request, UploadFile
 from gtts import gTTS
 from pydub import AudioSegment as Asegment
 from src.summarization.engines import LangChain
@@ -95,6 +95,7 @@ class DeepDive:
             print(f"Erro ao criar arquivo de áudio: {exc}")
             raise
 
-    def create_link_to_summary(self, response: dict):
-        response["summary_url"] = f"/download/{response.get('file_id')}"
+    def create_link_to_summary(self, request: Request, response: dict):
+        base_url = str(request.base_url)
+        response["summary_url"] = f"{base_url}download/{response.get('file_id')}"
         return response

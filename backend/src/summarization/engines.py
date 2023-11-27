@@ -12,11 +12,11 @@ class LangChain(Summarization):
         self.api_key = api_key
 
     def summarize(self, text: str) -> str:
-        prompt = f"Por favor, analise o seguinte texto e crie um resumo breve, \
-                  focando nas ideias principais e informações mais relevantes. \
+        prompt = f"Por favor, analise o seguinte texto e crie um resumo muito breve, \
+                  apenas com as informações mais relevantes. \
                   O resumo deve ser conciso, com poucas palavras, \
                   destacando apenas os aspectos mais importantes do texto. \
-                  Aqui está o texto para análise: :\n\n{text}\n\n Sumário:"
+                  Aqui está o texto para análise: \n\n{text}\n\n Sumário:"
         return self.llm.predict(prompt)
 
     def token_is_valid(self):

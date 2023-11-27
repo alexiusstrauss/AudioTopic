@@ -1,6 +1,6 @@
 import os
 
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
@@ -28,7 +28,7 @@ async def healthcheck():
 
 
 @app.post("/process-audio/", response_model=UploadResponse)
-async def create_upload_file(audio_file: UploadFile = File(..., description="arquivo .mp3 ou .wav")):
+async def create_upload_file(request: Request, audio_file: UploadFile = File(..., description="arquivo .mp3 ou .wav")):
     lang_chain = LangChain(api_key=OPEN_AI_TOKEN)
     service = DeepDive(llm_engine=lang_chain)
     service.validate_api_token()
@@ -40,7 +40,7 @@ async def create_upload_file(audio_file: UploadFile = File(..., description="arq
     response = service.speech_to_text(response)
     response = service.summarize_text(response=response)
     response = service.create_audio_from_summary(response=response)
-    response = service.create_link_to_summary(response=response)
+    response = service.create_link_to_summary(request=request, response=response)
 
     return UploadResponse(**response)
 
