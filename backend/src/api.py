@@ -1,19 +1,20 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
-from .exceptions import FileFormatException
-from .models import UploadResponse
-from .services import DeepDive
+from .services.exceptions import FileFormatException
+from .services.models import UploadResponse
+from .services.services import DeepDive
+from .settings.development import CORS_CONFIG
 
 app = FastAPI()
 
-# Configuração do middleware CORS
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=CORS_CONFIG["allow_origins"],
+    allow_credentials=CORS_CONFIG["allow_credentials"],
+    allow_methods=CORS_CONFIG["allow_methods"],
+    allow_headers=CORS_CONFIG["allow_headers"],
 )
 
 

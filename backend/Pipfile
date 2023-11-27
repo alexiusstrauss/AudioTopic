@@ -20,6 +20,7 @@ chromadb = "*"
 python-multipart = "*"
 speechrecognition = "*"
 pydub = "*"
+pylint = "*"
 
 [dev-packages]
 
