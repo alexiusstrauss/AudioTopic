@@ -2,13 +2,6 @@
   <div class="container mt-4">
     <h1 class="mb-4">Audio Topic App</h1>
 
-    <!-- Spinner de Carregamento -->
-    <div v-if="isLoading" class="d-flex justify-content-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Carregando...</span>
-      </div>
-    </div>
-
     <!-- Painel com Abas -->
     <ul class="nav nav-tabs">
       <li class="nav-item">
@@ -17,7 +10,7 @@
           :class="{ active: activeTab === 'upload' }"
           href="#"
           @click="activeTab = 'upload'"
-          >Gravar e Enviar</a
+          >Enviar audio</a
         >
       </li>
     </ul>
@@ -39,29 +32,58 @@
       </button>
     </div>
 
-    <!-- Resposta da API -->
-    <div v-if="apiResponse" class="mt-4">
-      <div class="card mb-3">
-        <div class="card-body">
-          <h5 class="card-title">Contexto Original</h5>
-          <p class="card-text">{{ apiResponse.original_context }}</p>
+    <div class="container">
+      <!-- Mensagem de Processamento -->
+      <div v-if="isLoading" class="alert alert-info">
+        Processando seu áudio...
+      </div>
+
+      <!-- Mensagem de Erro -->
+      <div v-if="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>    
+    
+      <!-- Spinner de Carregamento -->
+      <div v-if="isLoading" class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Carregando...</span>
         </div>
       </div>
 
-      <div class="card mb-3" v-if="apiResponse.summary_context">
-        <div class="card-body">
-          <h5 class="card-title">Resumo</h5>
-          <p class="card-text">{{ apiResponse.summary_context }}</p>
+      <!-- Mensagem de Erro -->
+      <div v-if="apiResponse" class="alert alert-success">
+        Audio carregado com sucesso
+      </div>   
+
+      <!-- Resposta da API -->
+      <div v-if="apiResponse" class="mt-4">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Contexto Original</h5>
+            <p class="card-text">{{ apiResponse.original_context }}</p>
+          </div>
+        </div>
+
+        <!-- Div para o Resumo e Reprodução do Áudio -->
+        <div v-if="apiResponse.summary_context" class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Resumo</h5>
+            <p class="card-text">{{ apiResponse.summary_context }}</p>
+
+            <!-- Player de Áudio -->
+            <div v-if="apiResponse.summary_url">
+              <audio controls :key="apiResponse.summary_url">
+                <source
+                  :src="apiResponse.summary_url"
+                  type="audio/mpeg"
+                />
+                Seu navegador não suporta a tag de áudio.
+              </audio>
+            </div>
+            <div v-else>Carregando áudio ou áudio não disponível...</div>
+          </div>
         </div>
       </div>
-
-      <a
-        v-if="apiResponse.mp3_summary_url"
-        :href="apiResponse.mp3_summary_url"
-        class="btn btn-primary"
-        download
-        >Download do Resumo em MP3</a
-      >
     </div>
   </div>
 </template>
@@ -76,6 +98,7 @@ export default {
       isLoading: false,
       showToast: false,
       errorMessage: "",
+      relativeUrl: "",
     };
   },
   methods: {
@@ -99,7 +122,9 @@ export default {
         let formData = new FormData();
         formData.append("audio_file", this.audioFile);
 
+        this.errorMessage = "";
         this.isLoading = true;
+        this.apiResponse = null;
         try {
           const response = await fetch("http://localhost:8000/process-audio/", {
             method: "POST",
@@ -116,6 +141,7 @@ export default {
           this.apiResponse = await response.json();
           console.log("Resposta da API:", this.apiResponse);
         } catch (error) {
+          this.errorMessage = error.message;
         } finally {
           this.isLoading = false;
         }

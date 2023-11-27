@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "FastAPI: Uvicorn",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/backend/src/run.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/backend",
+      // Adicionado o caminho do ambiente virtual do pipenv
+      "python": "/home/alexius/.local/share/virtualenvs/backend-D4SuNT68/bin/python",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/backend"
+      }
+    }
+  ]
+}
