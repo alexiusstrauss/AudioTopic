@@ -7,7 +7,7 @@ from fastapi.responses import FileResponse
 from .services.exceptions import FileFormatException, NotFoundException
 from .services.models import UploadResponse
 from .services.services import DeepDive
-from .settings.development import CORS_CONFIG, LLM_ENGINE
+from .settings.development import CORS_CONFIG, LLM_ENGINES
 
 app = FastAPI()
 
@@ -28,7 +28,7 @@ async def healthcheck():
 
 @app.post("/process-audio/", response_model=UploadResponse)
 async def create_upload_file(request: Request, audio_file: UploadFile = File(..., description="arquivo .mp3 ou .wav")):
-    service = DeepDive(llm_engine=LLM_ENGINE.get('LangChain'))
+    service = DeepDive(llm_engine=LLM_ENGINES.get("LangChain"))
     service.validate_api_token()
     response = service.upload_audio(audio_file)
 
