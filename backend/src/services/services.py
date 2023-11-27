@@ -2,15 +2,21 @@ from uuid import uuid4
 
 import speech_recognition as sr
 from fastapi import UploadFile
+from gtts import gTTS
 from pydub import AudioSegment as Asegment
+from src.summarization.engines import LangChain
+from src.summarization.interfaces import Summarization
 
-from .exceptions import RecognizeException
+from .exceptions import RecognizeException, SummarizeException
 
 
 class DeepDive:
     """
     Service responsavel por upload, conversao e validação do audio
     """
+
+    def __init__(self, llm_engine: Summarization):
+        self.llm_engine = llm_engine
 
     def upload_audio(self, file: UploadFile):
         """
@@ -55,3 +61,40 @@ class DeepDive:
         except Exception as exc:
             raise RecognizeException() from exc
         return wav_file_path
+
+    def summarize_text(self, response: dict) -> str:
+        try:
+            text_to_sumarize = response.get("original_context")
+            result = self.llm_engine.summarize(text=text_to_sumarize)
+            response["summary_context"] = result
+            return response
+        except Exception as exc:
+            print(f"Erro na sumazicação do texto: {exc}")
+            raise SummarizeException() from exc
+
+    def validate_api_token(self):
+        if isinstance(self.llm_engine, LangChain):
+            self.llm_engine.token_is_valid()
+
+    def create_audio_from_summary(self, response: dict):
+        """
+        Function to create an audio file from the summarized text
+        """
+        summarized_text = response.get("summary_context")
+        if not summarized_text:
+            raise ValueError("No summarized text found in the response")
+
+        tts = gTTS(text=summarized_text, lang="pt-br", slow=False)
+        audio_file_path = f"audio_files/{response['file_id']}_audio_summarize.mp3"
+
+        try:
+            tts.save(audio_file_path)
+            response["mp3_summary_url"] = audio_file_path
+            return response
+        except Exception as exc:
+            print(f"Erro ao criar arquivo de áudio: {exc}")
+            raise
+
+    def create_link_to_summary(self, response: dict):
+        response["summary_url"] = f"/download/{response.get('file_id')}"
+        return response
