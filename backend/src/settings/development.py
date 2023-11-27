@@ -16,7 +16,8 @@ CORS_CONFIG = {
 OPEN_AI_TOKEN = os.getenv("OPEN_AI_TOKEN")
 TENSORFLOW_MODEL_NAME = os.getenv("TENSORFLOW_MODEL_NAME")
 
-LLM_ENGINE = {
+# Carta automatica da engine a ser usada pelo service
+LLM_ENGINES = {
     "LangChain": LangChain(api_key=OPEN_AI_TOKEN),
     "Tensorflow": TensorFlow(model_name=TENSORFLOW_MODEL_NAME),
 }

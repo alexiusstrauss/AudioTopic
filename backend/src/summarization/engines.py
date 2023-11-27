@@ -54,7 +54,7 @@ class TensorFlow(Summarization):
     def summarize(self, text: str, max_length=650):
         # Preparar a entrada para o modelo
         inputs = self.tokenizer.encode(
-            f"summarize: {text}", return_tensors="tf", max_length=1500, truncation=True
+            f"summarize: {text}", return_tensors="tf", max_length=1600, truncation=True
         )
         # Gerar a saída do modelo
         summary_ids = self.model.generate(
