@@ -4,6 +4,7 @@ import requests
 from langchain.llms.openai import OpenAI
 from src.services.exceptions import ApiKeyException
 from src.summarization.interfaces import Summarization
+from transformers import AutoTokenizer, TFAutoModelForSeq2SeqLM
 
 
 class LangChain(Summarization):
@@ -45,9 +46,22 @@ class LangChain(Summarization):
             raise ApiKeyException()
 
 
-class TensorFlowStrategy(Summarization):
-    def __init__(self):
-        pass
+class TensorFlow(Summarization):
+    def __init__(self, model_name="t5-small"):
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model = TFAutoModelForSeq2SeqLM.from_pretrained(model_name)
 
-    def summarize(self, text: str) -> str:
-        return "Texto sumarizado com TensorFlow"
+    def summarize(self, text: str, max_length=650):
+        # Preparar a entrada para o modelo
+        inputs = self.tokenizer.encode(
+            f"summarize: {text}", return_tensors="tf", max_length=1500, truncation=True
+        )
+        # Gerar a saída do modelo
+        summary_ids = self.model.generate(
+            inputs,
+            max_length=max_length,
+            length_penalty=4.0,
+            num_beams=4,
+            early_stopping=True,
+        )
+        return self.tokenizer.decode(summary_ids[0], skip_special_tokens=True)
