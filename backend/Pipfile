@@ -22,6 +22,9 @@ speechrecognition = "*"
 pydub = "*"
 pylint = "*"
 bs4 = "*"
+pytest = "*"
+pytest-cov = "*"
+isort = "*"
 
 [dev-packages]
 

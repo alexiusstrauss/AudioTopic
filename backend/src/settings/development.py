@@ -1,6 +1,7 @@
 import os
 
 from dotenv import load_dotenv
+
 from src.summarization.engines import LangChain, TensorFlow
 
 # Carregar variáveis de ambiente do arquivo .env

@@ -27,7 +27,10 @@ async def healthcheck():
 
 
 @app.post("/process-audio/", response_model=UploadResponse)
-async def create_upload_file(request: Request, audio_file: UploadFile = File(..., description="arquivo .mp3 ou .wav")):
+async def create_upload_file(
+    request: Request,
+    audio_file: UploadFile = File(..., description="arquivo .mp3 ou .wav"),
+):
     service = DeepDive(llm_engine=LLM_ENGINES.get("LangChain"))
     service.validate_api_token()
     response = service.upload_audio(audio_file)
@@ -50,4 +53,4 @@ async def download_file(file_id: str):
     if not os.path.exists(file_path):
         raise NotFoundException()
 
-    return FileResponse(file_path, media_type='audio/mpeg', filename=f"{file_id}_audio_summarize.mp3")
+    return FileResponse(file_path, media_type="audio/mpeg", filename=f"{file_id}_audio_summarize.mp3")
