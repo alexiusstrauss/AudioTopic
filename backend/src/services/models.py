@@ -5,5 +5,4 @@ class UploadResponse(BaseModel):
     file_id: str
     original_context: str = None
     summary_context: str = None
-    audio_summarize: str = None
     summary_url: str = None
