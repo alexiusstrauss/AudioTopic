@@ -4,6 +4,7 @@
 **AudioTopic**  é um projeto com base em um teste para processar arquivos de áudio nos formatos: .mp3 ou .wav
 converter em texto usando a tecnologia STT, fazer um resumo deste conteúdo utilizando LLM e criar um áudio do resumo, disponibilizando para ouvir ou fazer download do resumo.
 Segue o link para leitura do desfio técnico e suas especificações.
+[Arquivo de especificações](AudioTipic-test.pdf)
 
 
 
@@ -46,3 +47,6 @@ Utilizei o framework Nuxt3 e criei um componente responsável consumir a API.
  o serviço: audiotopic-app vai aguardar que o serviço: audiotopic-api fique online e disponível para ficar online.
 se tudo estiver ok você poderá acessar o swagger da api no endereço: http://127.0.0.1:8000/docs
 e poderá acessar o app na página: http://127.0.0.1:3000.
+
+### Audios de exemplo:
+na pasta 'audios' contem dois arquivos para testar a aplicação.
