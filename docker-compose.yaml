@@ -3,6 +3,10 @@ services:
   audiotopic-api:
     image: audiotopic-api:latest
     container_name: audiotopic-api
+    environment:
+      OPEN_AI_TOKEN: sk-change-me
+      TENSORFLOW_MODEL_NAME: "t5-small"
+    
     command: sh -c "pipenv run uvicorn src.api:app --reload --host 0.0.0.0 --port 8000"
     ports:
       - "8000:8000"
