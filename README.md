@@ -48,5 +48,5 @@ Utilizei o framework Nuxt3 e criei um componente responsável consumir a API.
 se tudo estiver ok você poderá acessar o swagger da api no endereço: http://127.0.0.1:8000/docs
 e poderá acessar o app na página: http://127.0.0.1:3000.
 
-### Audios de exemplo:
+### Arquivo para teste:
 na pasta 'audios' contem dois arquivos para testar a aplicação.
