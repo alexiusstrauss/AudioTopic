@@ -13,7 +13,7 @@ WORKDIR /app
 
 RUN apt-get update -yy  \
     && apt-get upgrade -yy \
-    && apt-get install -yy libpq-dev git nano\
+    && apt-get install -yy libpq-dev git ffmpeg gcc \
     && pip install --upgrade pip \
     && pip install --no-cache-dir pipenv
 
