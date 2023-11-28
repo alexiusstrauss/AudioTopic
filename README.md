@@ -14,6 +14,7 @@ Utilizei o padrão de projeto "**Strategy**" para implementar através de uma in
 Para rodar os testes automatizados via Docker basta rodar o comando: `make test-api` caso o container esteja rodando, ou `docker exec -ti audiotopic-api pipenv run pytest`. 
 
 Deverá configurar um .env na pasta backend/src/ com as credenciais da OPENAI para utilização do serviço com LangChain.
+Ou configurar as credencias no docker-compose.yaml
 
     OPEN_AI_TOKEN=sk-change-me
     TENSORFLOW_MODEL_NAME="t5-small"
@@ -29,7 +30,7 @@ No arquivo **api.py** poderá configurar qual engine usar para o processo de res
  - Pipenv
  - FastAPI
  - Pytest e Pytest-cov
- -  Docker
+ - Docker
  - Make
 
 
@@ -38,7 +39,7 @@ Utilizei o framework Nuxt3 e criei um componente responsável consumir a API.
 **Tecnologias utilizadas:**
  - Nuxt3 
  - Javascript
- -  Docker
+ - Docker
  - Make  
 
  
