@@ -2,9 +2,10 @@ from http import HTTPStatus
 
 import requests
 from langchain.llms.openai import OpenAI
+from transformers import AutoTokenizer, TFAutoModelForSeq2SeqLM
+
 from src.services.exceptions import ApiKeyException
 from src.summarization.interfaces import Summarization
-from transformers import AutoTokenizer, TFAutoModelForSeq2SeqLM
 
 
 class LangChain(Summarization):
@@ -53,9 +54,7 @@ class TensorFlow(Summarization):
 
     def summarize(self, text: str, max_length=650):
         # Preparar a entrada para o modelo
-        inputs = self.tokenizer.encode(
-            f"summarize: {text}", return_tensors="tf", max_length=1600, truncation=True
-        )
+        inputs = self.tokenizer.encode(f"summarize: {text}", return_tensors="tf", max_length=1600, truncation=True)
         # Gerar a saída do modelo
         summary_ids = self.model.generate(
             inputs,

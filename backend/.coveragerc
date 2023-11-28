@@ -1,0 +1,26 @@
+[run]
+omit = 
+    */migrations/*,
+    */settings/*,
+    *migrations*,
+    *tests*,
+    *test_*,
+    *run.py*,
+    *apps.py*,
+    *admin.py*,
+    *settings*,
+    *manage.py*,
+    *conftest.py*,
+    *asgi.py*,
+    *wsgi*,
+    *urls*,       
+    *__init__.py*,
+
+source = src/
+data_file = .coverage
+
+[report]
+fail_under = 60
+show_missing = False
+skip_covered = False
+sort = Cover

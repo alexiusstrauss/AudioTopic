@@ -4,10 +4,10 @@ import speech_recognition as sr
 from fastapi import Request, UploadFile
 from gtts import gTTS
 from pydub import AudioSegment as Asegment
+
+from src.services.exceptions import RecognizeException, SummarizeException
 from src.summarization.engines import LangChain
 from src.summarization.interfaces import Summarization
-
-from .exceptions import RecognizeException, SummarizeException
 
 
 class DeepDive:
@@ -45,9 +45,7 @@ class DeepDive:
         with sr.AudioFile(audio_file_path) as source:
             audio_data = recognizer.record(source)
             try:
-                text = recognizer.recognize_google(
-                    audio_data=audio_data, language="pt-BR"
-                )
+                text = recognizer.recognize_google(audio_data=audio_data, language="pt-BR")
                 upload_audio["original_context"] = text
             except (sr.UnknownValueError, sr.RequestError) as exc:
                 raise RecognizeException() from exc
