@@ -10,7 +10,7 @@ Segue o link para leitura do desfio técnico e suas especificações.
 
 ### Backend
 No backend utilizei a linguagem **python na versão 3.10** e o framework **FastAPI** na construção da api.
-Utilizei o padrão de projeto "**Strategy**" para implementar através de uma interface a engine que será usada para resumir o texto usando LLM. Deixei disponível duas engines: **LangChain** e **Tensorflow** e Seguindo o **SOLID** e **Clean Code**, deixando código mais flexível e fácil de testar ou dar manutenção.
+Utilizei o padrão de projeto "**Strategy**" para implementar através de uma interface a engine que será usada para resumir o texto usando LLM. Deixei disponível duas engines: **LangChain** e **Tensorflow**. Seguindo o **SOLID** e **Clean Code**, deixando código mais flexível e fácil de testar ou dar manutenção.
 Para rodar os testes automatizados via Docker basta rodar o comando: `make test-api` caso o container esteja rodando, ou `docker exec -ti audiotopic-api pipenv run pytest`. 
 
 Deverá configurar um .env na pasta backend/src/ com as credenciais da OPENAI para utilização do serviço com LangChain.
@@ -43,9 +43,9 @@ Utilizei o framework Nuxt3 e criei um componente responsável consumir a API.
  - Make  
 
  
- Ao rodar o comando: `make run` na raiz do projeto, será criado as imagens docker do audiotopic-api e audiotopic-app
- e iniciado os serviços via docker-compose up.
- o serviço: audiotopic-app vai aguardar que o serviço: audiotopic-api fique online e disponível para ficar online.
+Ao rodar o comando: `make up` na raiz do projeto, será criado as imagens docker do audiotopic-api e audiotopic-app
+e iniciado os serviços via docker-compose up.
+o serviço: audiotopic-app vai aguardar que o serviço: audiotopic-api fique online e disponível para ficar online.
 se tudo estiver ok você poderá acessar o swagger da api no endereço: http://127.0.0.1:8000/docs
 e poderá acessar o app na página: http://127.0.0.1:3000.
 
