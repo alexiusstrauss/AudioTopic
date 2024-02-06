@@ -126,7 +126,7 @@ export default {
         this.isLoading = true;
         this.apiResponse = null;
         try {
-          const response = await fetch("http://localhost:8000/process-audio/", {
+          const response = await fetch("https://api.altsystems.com.br/process-audio/", {
             method: "POST",
             body: formData,
           });

@@ -2,21 +2,20 @@ from http import HTTPStatus
 
 import requests
 from langchain.llms.openai import OpenAI
-from transformers import AutoTokenizer, TFAutoModelForSeq2SeqLM
-
 from src.services.exceptions import ApiKeyException
 from src.summarization.interfaces import Summarization
+from transformers import AutoTokenizer, TFAutoModelForSeq2SeqLM
 
 
 class LangChain(Summarization):
     def __init__(self, api_key: str):
-        self.llm = OpenAI(temperature=0, api_key=api_key)
+        self.llm = OpenAI(temperature=0, api_key=api_key, model="gpt-3.5-turbo-instruct")
         self.api_key = api_key
 
     def summarize(self, text: str) -> str:
-        prompt = f"Por favor, analise o seguinte texto e crie um resumo muito breve, \
-                  apenas com as informações mais relevantes. \
-                  O resumo deve ser conciso, com poucas palavras, \
+        prompt = f"analise o texto e crie um resumo breve, \
+                  com as informações mais relevantes. \
+                  O resumo deve ser conciso \
                   destacando apenas os aspectos mais importantes do texto. \
                   Aqui está o texto para análise: \n\n{text}\n\n Sumário:"
         return self.llm.predict(prompt)
@@ -34,7 +33,7 @@ class LangChain(Summarization):
                 url,
                 headers=headers,
                 json=data,
-                timeout=10,
+                timeout=15,
             )
         except Exception as exc:
             raise ApiKeyException() from exc
@@ -48,19 +47,20 @@ class LangChain(Summarization):
 
 
 class TensorFlow(Summarization):
-    def __init__(self, model_name="t5-small"):
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = TFAutoModelForSeq2SeqLM.from_pretrained(model_name)
+    pass
+    # def __init__(self, model_name="t5-small"):
+    #     self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+    #     self.model = TFAutoModelForSeq2SeqLM.from_pretrained(model_name)
 
-    def summarize(self, text: str, max_length=650):
-        # Preparar a entrada para o modelo
-        inputs = self.tokenizer.encode(f"summarize: {text}", return_tensors="tf", max_length=1600, truncation=True)
-        # Gerar a saída do modelo
-        summary_ids = self.model.generate(
-            inputs,
-            max_length=max_length,
-            length_penalty=4.0,
-            num_beams=4,
-            early_stopping=True,
-        )
-        return self.tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+    # def summarize(self, text: str, max_length=650):
+    #     # Preparar a entrada para o modelo
+    #     inputs = self.tokenizer.encode(f"summarize: {text}", return_tensors="tf", max_length=1600, truncation=True)
+    #     # Gerar a saída do modelo
+    #     summary_ids = self.model.generate(
+    #         inputs,
+    #         max_length=max_length,
+    #         length_penalty=4.0,
+    #         num_beams=4,
+    #         early_stopping=True,
+    #     )
+    #     return self.tokenizer.decode(summary_ids[0], skip_special_tokens=True)

@@ -20,6 +20,9 @@ services:
   audiotopic-app:
     image: audiotopic-app:latest
     container_name: audiotopic-app
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000   
     depends_on:
       - audiotopic-api
     command: sh -c "./wait-for-api.sh && pnpm run dev"
