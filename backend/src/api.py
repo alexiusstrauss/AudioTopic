@@ -31,7 +31,7 @@ async def create_upload_file(
     request: Request,
     audio_file: UploadFile = File(..., description="arquivo .mp3 ou .wav"),
 ):
-    service = DeepDive(llm_engine=LLM_ENGINES.get("LangChain"))
+    service = DeepDive(llm_engine=LLM_ENGINES.get("LiteLLMFlow"))
     service.validate_api_token()
     response = service.upload_audio(audio_file)
 

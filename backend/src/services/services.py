@@ -6,7 +6,7 @@ from gtts import gTTS
 from pydub import AudioSegment as Asegment
 
 from src.services.exceptions import RecognizeException, SummarizeException
-from src.summarization.engines import LangChain
+from src.summarization.engines import LangChain, LiteLLMFlow
 from src.summarization.interfaces import Summarization
 
 
@@ -71,8 +71,8 @@ class DeepDive:
             raise SummarizeException() from exc
 
     def validate_api_token(self):
-        if isinstance(self.llm_engine, LangChain):
-            self.llm_engine.token_is_valid()
+        # Verificar a validade do token independente da engine
+        self.llm_engine.token_is_valid()
 
     def create_audio_from_summary(self, response: dict):
         """
