@@ -7,6 +7,88 @@ from src.summarization.interfaces import Summarization
 from transformers import AutoTokenizer, TFAutoModelForSeq2SeqLM
 
 
+class LiteLLMFlow(Summarization):
+    def __init__(self, url_api: str, api_key: str, model: str):
+        self.url_api = url_api
+        self.api_key = api_key
+        self.model = model
+
+    def summarize(self, text: str) -> str:
+        """
+        Envia o texto para a API do LiteLLM e recebe um resumo
+        """
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+        
+        data = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": "Você é um assistente especializado em criar resumos concisos e informativos."},
+                {"role": "user", "content": f"Analise o texto e crie um resumo breve com as informações mais relevantes. O resumo deve ser conciso, destacando apenas os aspectos mais importantes do texto.\n\nTexto para análise: {text}"}
+            ],
+            "temperature": 0.3,
+            "max_tokens": 500
+        }
+        
+        try:
+            response = requests.post(
+                f"{self.url_api}/chat/completions",
+                headers=headers,
+                json=data,
+                timeout=30
+            )
+            
+            response.raise_for_status()
+            result = response.json()
+            
+            # Extrair a resposta do modelo
+            if "choices" in result and len(result["choices"]) > 0:
+                return result["choices"][0]["message"]["content"].strip()
+            else:
+                raise ValueError("Resposta inesperada da API LiteLLM")
+                
+        except Exception as exc:
+            print(f"Erro ao chamar a API LiteLLM: {exc}")
+            raise ApiKeyException() from exc
+            
+    def token_is_valid(self):
+        """
+        Verifica se o token da API é válido
+        """
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+        
+        data = {
+            "model": self.model,
+            "messages": [
+                {"role": "user", "content": "Olá"}
+            ],
+            "max_tokens": 5
+        }
+        
+        try:
+            response = requests.post(
+                f"{self.url_api}/chat/completions",
+                headers=headers,
+                json=data,
+                timeout=10
+            )
+            
+            if response.status_code in [
+                HTTPStatus.UNAUTHORIZED,
+                HTTPStatus.BAD_REQUEST,
+                HTTPStatus.FORBIDDEN,
+            ]:
+                raise ApiKeyException()
+                
+        except Exception as exc:
+            raise ApiKeyException() from exc
+
+
 class LangChain(Summarization):
     def __init__(self, api_key: str):
         self.llm = OpenAI(temperature=0, api_key=api_key, model="gpt-3.5-turbo-instruct")
